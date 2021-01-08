@@ -103,7 +103,7 @@ app.post('/', ifLoggedIn, [
             bcrypt.compare(user_pass, rows[0].password).then(compare_result => {
                 if(compare_result === true){
                     req.session.isLoggedIn = true;
-                    req.sesssion.userId = rows[0].id;
+                    req.session.userId = rows[0].id;
                     res.redirect('/');
                 }else{
                     res.render('login-register',{
@@ -113,6 +113,15 @@ app.post('/', ifLoggedIn, [
             }).catch(err =>{
                 if(err) throw err;
             })
+        }).catch(err =>{
+            if(err) throw err;
+        })
+    }else{
+        let allErrors = validation_result.errors.map((error) =>{
+            return error.msg;
+        })
+        res.render('login-register',{
+            login_errors: allErrors
         })
     }
 })
